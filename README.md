@@ -1,6 +1,6 @@
 # Cuarta tarea de APA 2023: Generación de números aleatorios
 
-## Nom i cognoms
+## Nom i cognoms: Núria Rodríguez Pardo
 
 ## Generación de números aleatorios usando el algoritmo LGC
 
@@ -165,11 +165,91 @@ Inserte a continuación una captura de pantalla que muestre el resultado de ejec
 fichero `aleatorios.py` con la opción *verbosa*, de manera que se muestre el
 resultado de la ejecución de los tests unitarios.
 
+![alt text](image.png)
+
 #### Código desarrollado
 
 Inserte a continuación el código de los métodos desarrollados en esta tarea, usando los
 comandos necesarios para que se realice el realce sintáctico en Python del mismo (no
 vale insertar una imagen o una captura de pantalla, debe hacerse en formato *markdown*).
+
+```py
+  class Aleat:
+      '''
+          Esta es una clase que representa un generador de números aleatorios. 
+          Utiliza el algoritmo de generación de números aleatorios de LCG.
+          Utilizamos: self.x = (self.a * self.x + self.c) % self.m (LCG). Por defecto, utilizaremos los valores del estàndar POSIX con semilla x0 = 1212121.
+          
+          TEST: 
+
+          -- Comprobación del funcionamiento de Aleat
+
+          >>> rand = Aleat(m=32, a=9, c=13, x0=11)
+          >>> for _ in range(4):
+          ...     print(next(rand))
+          16
+          29
+          18
+          15
+
+          -- Comprobación del reinicio de Aleat
+
+          >>> rand(29)
+          >>> for _ in range(4):
+          ...     print(next(rand))
+          18
+          15
+          20
+          1
+      '''
+      def __init__(self, *, m=2**31, a=1103515245, c=12345, x0 = 1212121):
+          self.m = m
+          self.a = a
+          self.c = c
+          self.x = x0
+      def __next__(self):
+          self.x = (self.a * self.x + self.c) % self.m
+          return self.x
+      def __call__(self, nuevaX):
+          self.x = nuevaX
+
+  def aleat(*, m=2**31, a=1103515245, c=12345, x0=1212121):
+      '''
+          Esta es una funcion que representa un generador de números aleatorios. 
+          Utiliza el algoritmo de generación de números aleatorios de LCG. 
+          Utilizamos: x = (a * x + c) % m. Por defecto, utilizaremos los valores del estàndar POSIX con semilla x0 = 1212121.
+          
+          TEST: 
+
+          -- Comprobación del funcionamiento de aleat()
+
+          >>> rand = aleat(m=64, a=5, c=46, x0=36)
+          >>> for _ in range(4):
+          ...     print(next(rand))
+          34
+          24
+          38
+          44
+
+          -- Comprobación del reinicio de aleat()
+
+          >>> rand.send(24)
+          38
+
+          >>> for _ in range(4):
+          ...     print(next(rand))
+          44
+          10
+          32
+          14
+      '''
+      x = x0
+      while True:
+          x = (a * x + c) % m  
+          nuevo = yield x      
+          if nuevo is not None:
+              x = nuevo        
+```
 
 #### Subida del resultado al repositorio GitHub y *pull-request*
 
